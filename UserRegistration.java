@@ -1,80 +1,90 @@
-import java.util.Scanner;
-
 public class UserRegistration {
-    Scanner sc = new Scanner(System.in);
 
-    public static void main(String[] args) {
-        UserRegistration obj = new UserRegistration();
-        if (obj.checkName()  == true) {
-            System.out.println("Entered name is in correct format");
-        } else {
-            System.out.println("PLEASE Enter  a valid name");
-        }
-        UserRegistration obj1 = new UserRegistration();
-        if(obj1.checkEmail() == true) {
-            System.out.println("Entered email is in correct format");
-        } else {
-            System.out.println("Enter valid email");
-        }
+    private static final String nameFormat = "[A-Z][a-z]{2,}";
+    private static final String emailFormat = "^[0-9a-zA-Z]+([._+-][0-9a-zA-Z]+)*[@][0-9A-Za-z]+([.][a-zA-Z]{2,4})*$";
+    private static final String mobileFormat = "^[0-9]{1,2}[ ][0-9]{10}$";
+    private static final String passwordFormat = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[*.!@#$%^&(){}:'<>,.>/~`_+=|].).{8,}$";
 
-        UserRegistration obj2 = new UserRegistration();
-        if(obj2.checkPhoneNumber() == true) {
-            System.out.println("Entered phone number is in correct format");
-        } else {
-            System.out.println("Enter valid phone number");
-        }
+    ValidateUserDetailFunction userDetailFunction = (x, y) -> x.matches(y);
 
-        UserRegistration obj3 = new UserRegistration();
-        if(obj3.checkPassword() == true) {
-            System.out.println("Entered password is in correct format");
-        } else {
-            System.out.println("Enter valid phone number");
+    public String validateFName(String fName) throws InvalidDetailExceptions {
+        try {
+            if(userDetailFunction.validate(fName, nameFormat) == true) {
+                return "Success";
+            }
+            else {
+                throw new InvalidDetailExceptions(InvalidDetailExceptions.ExceptionType.ENTERED_INVALID, "Invalid first name format");
+            }
+        }catch (NullPointerException e) {
+            throw new InvalidDetailExceptions(InvalidDetailExceptions.ExceptionType.ENTERED_NULL, "Don't pass null value");
         }
     }
 
-    public boolean checkName() {
-        System.out.println("Enter the  first name");
-        String firstName = sc.next();
-        System.out.println("Enter the last name");
-        String lastName = sc.next();
-
-        if (firstName.matches("[A-Z][a-z]{3,}") && (lastName.matches("[A-Z][a-z]{3,}") == true) == true) {
-            return true;
-        } else {
-            return false;
+    public String validateLName(String lName) throws InvalidDetailExceptions {
+        try {
+            if(userDetailFunction.validate(lName, nameFormat) == true){
+                return "Success";
+            }else {
+                throw new InvalidDetailExceptions(InvalidDetailExceptions.ExceptionType.ENTERED_INVALID, "Invalid last name format");
+            }
+        }catch (NullPointerException e) {
+            throw new InvalidDetailExceptions(InvalidDetailExceptions.ExceptionType.ENTERED_NULL, "Don't pass null value");
         }
     }
 
-    public boolean checkEmail() {
-        System.out.println("Enter the email");
-        String email = sc.next();
-        if(email.matches( "^[0-9a-zA-Z]+([._+-][0-9a-zA-Z]+)*[@][0-9A-Za-z]+[.][a-zA-Z]{2,4}([.][a-zA-Z]{2,4})*$" ) == true){
-            return true;
+    public String validateEmailId(String email) throws InvalidDetailExceptions {
+        try {
+            if(userDetailFunction.validate(email, emailFormat)) {
+                return "Success";
+            }
+            else {
+                throw new InvalidDetailExceptions(InvalidDetailExceptions.ExceptionType.ENTERED_INVALID, "Invalid email format");
+            }
         }
-        else {
-            return false;
+        catch (NullPointerException e) {
+            throw new InvalidDetailExceptions(InvalidDetailExceptions.ExceptionType.ENTERED_NULL, "Don't pass null value");
+        }
+    }
+    public String validatePhoneNumber(String phone) throws InvalidDetailExceptions {
+        try {
+            if (userDetailFunction.validate(phone, mobileFormat) == true)
+            {
+                return "Success";
+            }
+            else {
+                throw new InvalidDetailExceptions(InvalidDetailExceptions.ExceptionType.ENTERED_INVALID,"Provide valid mobile number format");
+            }
+        }catch (NullPointerException e) {
+            throw new InvalidDetailExceptions(InvalidDetailExceptions.ExceptionType.ENTERED_NULL, "Don't pass null value");
         }
     }
 
-    public boolean checkPhoneNumber() {
-        System.out.println("Enter the Phone Number");
-        String phoneNumber = sc.next();
-        if(phoneNumber.matches( "^[0-9]{1,2}[ ][0-9]{10}$") == true ){
-            return true;
-        }
-        else {
-            return false;
+    public String validatePassword(String passcode) throws InvalidDetailExceptions {
+        try {
+            if (userDetailFunction.validate(passcode, passwordFormat))
+            {
+                return "Success";
+            }
+            else {
+                throw new InvalidDetailExceptions(InvalidDetailExceptions.ExceptionType.ENTERED_INVALID, "Provide valid password Format");
+            }
+        }catch (NullPointerException e){
+            throw new InvalidDetailExceptions(InvalidDetailExceptions.ExceptionType.ENTERED_NULL, "Don't pass null value");
         }
     }
 
-    public boolean checkPassword() {
-        System.out.println("Please Enter the Password");
-        String phoneNumber = sc.next();
-        if(phoneNumber.matches( "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[*.!@#$%^&(){}:'<>,.>/~`_+=|].).{8,}$" ) == true ){
-            return true;
+    public String moodAnalyse(String fName, String lName, String phoneNumber, String email, String password ) throws InvalidDetailExceptions {
+        try{
+            if(validateFName(fName) == "Success" && validateLName(lName) == "Success" && validateEmailId(email) == "Success" && validatePhoneNumber(phoneNumber) == "Success" && validatePassword(password) == "Success"){
+                return "HAPPY";
+            }
+            else {
+                return "SAD";
+            }
         }
-        else {
-            return false;
+        catch (NullPointerException e)
+        {
+            throw new InvalidDetailExceptions(InvalidDetailExceptions.ExceptionType.ENTERED_NULL, "Dont pass null value");
         }
     }
 }
